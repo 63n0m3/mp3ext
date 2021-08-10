@@ -1,0 +1,125 @@
+<html>
+<head>
+<style>
+body{background-color:black;max-width:1200px;}
+h1 {color:#d4ea20;font-family:Nyala;text-align:center;font-size:200%;}
+h2 {color:#c4da20;font-family:Nyala;margin-top:0px;margin-bottom:0px;font-size:140%;text-align:center;}
+pre {color:#00ffff;}
+p {color:#00ffff;font-family:Segoe UI;text-align:center;margin-top:0px;margin-bottom:0px;font-size:120%;}
+p.small {color:#00ffff;font-family:Segoe UI;text-align:center;margin-top:0px;margin-bottom:0px;font-size:100%;}
+p.left {color:#00ffff;font-family:Segoe UI;display:inline;text-align:left;font-size:125%;}
+p.links {color:#f9ec7e;font-family:Segoe UI;display:inline;text-align:left;}
+a {text-decoration:none;}
+a:link {color:#00afef;font-family:Segoe UI;}
+a:visited {color:#a4ca20;font-family:Segoe UI;}
+a:hover {color:#e396f4;font-family:Segoe UI;}
+img {display:block;max-width:100%;margin-left:auto;margin-right:auto;}
+</style>
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+
+<h1>MP3ext</h1>
+<p>
+<a href="file:///0.96cut fixed.exe">Executive for Windows</a>,  <a href="file:///96cutfixed">Executive for Linux</a>,  <a href="file:///96cutfixed.cpp">Source code</a>.
+<br>To compile on linux:
+g++ -o 96cutfixed 96cutfixed.cpp -funsigned-char
+Dont know why but on the first run I got segmentation fault in a place where program should be creating new file(ofstream). After running: ls -l problem disappears.
+If you are compiling on Windows remember to add unsigned char flag to compiler options: -funsigned-char
+Source code also works on Android Cxxdroid app.</p>
+
+
+<br><h2>LINKS:</h2>
+<p>
+Folder with all:
+<br><a href="https://drive.google.com/folderview?id=1py_4hUFxeNF2HuGWFWmNVFpoLtm548Vy">https://drive.google.com/folderview?id=1py_4hUFxeNF2HuGWFWmNVFpoLtm548Vy</a>
+<br>Report bugs(add buggy mp3 + same name .txt file with description):
+<br class="left"><a href="https://drive.google.com/folderview?id=1Wg_sGTf-3wGS-7eu0Ap8n33x5wL2jov-">https://drive.google.com/folderview?id=1Wg_sGTf-3wGS-7eu0Ap8n33x5wL2jov-</a>
+<br>Forum:
+<br><a href="https://forum.speakerplans.com/mp3-cleaner-extractor-encoder-comparator_topic103812.htm">https://forum.speakerplans.com/mp3-cleaner-extractor-encoder-comparator_topic103812.htm</a>
+<br>Information about Mp3 Structure:
+<br><a href="mp3_theory.pdf">mp3_theory.pdf</a>
+<br><a href="10.1.1.557.4662.pdf">10.1.1.557.4662.pdf</a>
+<br>Watch out for "spelling" mistakes. One is at the channel mode.
+<br>
+</p>
+
+<br><br><h2>TUTORIAL:</h2>
+<img src="header info.jpg">
+<br><p>
+First are 2 numbers-indexes. First number is the index of frame after initial sorting. Second one is the index number of the frame after all sorting was done taking into account correlation between frames.
+</pre>
+<p class="left">
+<font color=#d396f4>i</font> - is the index of Byte in opened file where header is located. If you open mp3 file in <a href="https://mh-nexus.de/en/hxd/">hex edit</a> -> Search -> Goto (dec) and write i, you will find this header.
+<br><font color=#d396f4>flb</font> is confusingly used as frame length in Bytes but ... such thing doesnt exists... so it is distance in Bytes to next header which is calculated from sampling rate, bitrate and mpeg/layer used. Naturally if i+flb is equal to i of the next frame is the basis criterion of frame validity.
+<br><font color=#d396f4>bitrate, sampling rate, flb</font>
+<br><font color=#d396f4>negative offset</font> - from header to first Byte of data. This is where the frame really starts.
+<br><font color=#d396f4>pre_h_valid</font> - distance to previous hvalid header. It is for my debugging. If you find here unexpectedly high value it will be interesting subject for analysis. You can always drop me file to: <a href="https://drive.google.com/folderview?id=1Wg_sGTf-3wGS-7eu0Ap8n33x5wL2jov-" title="Google Drive - mp3ext - debug">Debug.</a>
+<br><font color=#d396f4>pad</font> - is the padding
+<br><font color=#d396f4>fr_s</font> - frame size - its real size from decoder point of view. So entire coding data + header rounded to full Byte
+<br><font color=#d396f4>m/s</font> - mono/stereo
+<br><font color=#d396f4>val</font> - if frame was considered valid by algorithms
+<br><font color=#d396f4>empty_end_b</font> - bits after the fame data ends that are unused before next frame cames.
+</p>
+<img src="data info.jpg">
+<p>
+<br>When you dig into menu and activate Show frame data: Every 1 mp3 frame has 1 header with side info(optionally crc check*). And in each frame there are 2 granules if it is a mono frame and 4 granules for stereo frame. With Show frame data on(in mpeg layer 3 frame consists 1152 samples so 1152/2 samples per granule) you can see after frame param info, info about granules. Length of each granule in bits. Following is hex data of the frame divided into granules and (header+side info). Now if you look where the frame data ends it will tell you how much unused space is left to following frame. This would be first school criterion for comparing encoders. There are different encoders. Some use oversized bitrate and leave empty space after data ends. Better use negative offset value of next frame to compensate for this. Many use various bitrate which changes calculated distance between frame headers. VBR is already implemented. There is one more thing called Free bitrate. This option currently doesnt work but files encoded this way are very unpopular. 1% would be overestimation.</p>
+
+<br><p class="small">*In reality crc check only tells if entire data in a frame was corrupted or not. I skipped crc check. It is implemented in algorithms based on lengths but I havent calculated the crc itself. All in all it only tells info to decoder if frame should be played or if previous/following frame should be played instead. Moreover it is really unpopular to do crc checks in mp3 frames.</p>
+
+<br><p>In menu you can also specify which frames to show.</p>
+
+<br><p>There are also statistics of fake frames and valid ones.</p>
+<br><img src="fr stats.jpg">
+
+
+<br><h2>EXAMPLES:</h2>
+<p>
+<a href="https://drive.google.com/folderview?id=1py_4hUFxeNF2HuGWFWmNVFpoLtm548Vy" title="Google Drive - mp3ext">21. Gareth Emery - Tokyo.mp3</a>
+<br><img src="tok1.jpg">
+<br><img src="tok2.jpg">
+<br>Large empty_end_bits. A lot of empty space at the end of the frame. You can see constant oversized bitrate comparing to amount of data. Encoder practicly didnt operate n_offset value either. Its 320kbps value is overestimated.
+</p>
+<br>
+<br>
+<p><a href="https://drive.google.com/folderview?id=1py_4hUFxeNF2HuGWFWmNVFpoLtm548Vy" title="Google Drive - mp3ext">20 - Kat Krazy feat. elkka - Siren (Armin van Buuren Remix).mp3</a>
+<br><img src="armin.jpg">
+Nicely operating n_offset value. Its frames data starts next byte just after preceding frame finishes. True 256kbps.</p>
+<br>
+<br><p>
+<a href="https://drive.google.com/folderview?id=1py_4hUFxeNF2HuGWFWmNVFpoLtm548Vy" title="Google Drive - mp3ext">David Guetta & Showtek feat. Vassy vs. Dj Rich-Art - Bad Rocking (Rich-Mond Mash-Up)(2014)</a>
+<img src="dav&sho.jpg">
+This one is still a mystery for me. It seems to have much bigger real bitrate. If you look carefully at the frames the negative empty_end_bits tells that frame data exists within multiple consecutive frames. So same data is used to code twice(multiple frames). It doesnt mean the quality grows as the bitrate. One frame makes restrictions for the other but nevertheless amazing. I was trying to write algorithm to separate frames... but unfortunately it is impossible. Maximum bitrate of 320kbps gives restriction on flb size. Maybe with free bitrate(0b0000) but this is also problematic for a players. David Guetta & Showtek :) check 0xea10 if you fancy :)
+</p>
+<br>
+
+
+
+<h2>UNFINISHED:</h2>
+<p>Frame functions:
+<br>display(source) - Displays the whole frame dividing it on separate granules and header. Watch out with the calibration. I havent precisely check it so it may be 1 byte off.
+<br>move_data(source, header_distance, move_frame) moves frame in the source. And moves its header relatively to data. header_distance - this is the new negative offset value. (source, 15, 0) will move frame header to position 15 bytes from start of the frame. (source, 0, -10) should move entire frame 10 bytes earlier. As the frame was moved it naturally sets up its new i_point, s_i pointer, n_offset and writes new n_offset into frames side info.
+</p>
+
+<br><p>Another functions:
+repack_frames - it was supposed to be function handling move_data(...) so the frames would be align more efficiently in bad encoders. It wasnt finished. Currently it writes 0x00 bytes where data ends.
+</p>
+<br>
+<h2>Known bugs:</h2>
+<p>Sometimes program treats fake frame at the beginning inside id tags as valid so it copies id tags or its part. Example: <a href="https://drive.google.com/folderview?id=1py_4hUFxeNF2HuGWFWmNVFpoLtm548Vy" title="Google Drive - mp3ext">Matstubs - War (Bass Boosted)</a>. In this case players are likely to show fake information about song time.
+<br>Wrong total frames time.
+</p>
+
+
+
+</body>
+
+</html>
