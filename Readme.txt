@@ -1,4 +1,5 @@
-﻿To compile on linux:
+﻿LOOK INTO HTML FILE. IT HAS INCLUDED PICTURES EXPLAINING FOLLOWING TUTORIAL.
+To compile on linux:
 g++ -o 96cutfixed 96cutfixed.cpp -funsigned-char
 Dont know why but on the first run I got segmentation fault in a place where program should be creating new file(ofstream). After running: ls -l problem disappears.
 If you are compiling on Windows remember to add unsigned char flag to compiler options: -funsigned-char
@@ -7,7 +8,7 @@ Source code also works on Android Cxxdroid app.
 
 LINKS:
 https://drive.google.com/folderview?id=1py_4hUFxeNF2HuGWFWmNVFpoLtm548Vy
-for debug files: https://drive.google.com/folderview?id=1Wg_sGTf-3wGS-7eu0Ap8n33x5wL2jov-
+for debug files: no longer maintained.
 https://forum.speakerplans.com/mp3-cleaner-extractor-encoder-comparator_topic103812.html
 
 
