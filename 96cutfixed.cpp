@@ -1,3 +1,6 @@
+//by Gen0me https://github.com/63n0m3/mp3ext/
+//btc: bc1qla2nm4zgnmvnedl5z4n8cqpvf5fjqrrh2akeec
+
 #include <iostream>
 #include <fstream>
 #include <string>
