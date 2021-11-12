@@ -63,3 +63,5 @@ repack_frames - it was supposed to be function handling move_data(...) so the fr
 Known bugs:
 Sometimes program treats fake frame at the beginning inside id tags as valid so it copies id tags or its part. Example: Matstubs - War (Bass Boosted). In this case players are likely to show fake information about frames time.
 
+by Gen0me, https://github.com/63n0m3/mp3ext/
+btc: bc1qla2nm4zgnmvnedl5z4n8cqpvf5fjqrrh2akeec
