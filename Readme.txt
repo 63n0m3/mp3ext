@@ -1,4 +1,8 @@
-﻿LOOK INTO HTML FILE. IT HAS INCLUDED PICTURES EXPLAINING FOLLOWING TUTORIAL.
+﻿edit Nov 2021:
+I cleaned up the source code .cpp file and got rid of the conversion int to string to int back again. I replaced this part of the code with vectors. Besides I noticed last version crashed on 64 bit compilator around line 739 (fl.[n].i_point=((int... of 96cutfixed.cpp where was this conversion. New cpp file is "97 on vectors.cpp" Tested on Windows with 64 and 32 compilers.
+
+edit first:
+LOOK INTO HTML FILE. IT HAS INCLUDED PICTURES EXPLAINING FOLLOWING TUTORIAL.
 To compile on linux:
 g++ -o 96cutfixed 96cutfixed.cpp -funsigned-char
 Dont know why but on the first run I got segmentation fault in a place where program should be creating new file(ofstream). After running: ls -l problem disappears.
