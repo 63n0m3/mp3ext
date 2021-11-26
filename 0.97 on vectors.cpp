@@ -614,11 +614,18 @@ long long rewrite_frames(struct frame * fr, int frames_count, char * input, char
     long s1;
     int k_i;
     int end_bits;
-    int neg_offset_fr0 = fr[0].n_offset;
-    if(neg_offset_fr0 < 0) neg_offset_fr0 = 0;
-
+    bool first_frame = false;
+    int neg_offset_fr0;
     for(int n = 0; n < frames_count; n++){
         if(fr[n].valid_frame == 0) continue;
+        if (first_frame == false){
+            if (fr[n].i_point - fr[n].n_offset<0) continue;
+            else {
+                first_frame = true;
+                neg_offset_fr0 = fr[n].n_offset;
+                if(neg_offset_fr0 < 0) neg_offset_fr0 = 0;
+            }
+        }
             if(fr[n].empty_end_b < 0){
                 for(int k = 0;n + k < frames_count && k < 100; k++){
                     if(fr[n + k].valid_frame == 1){
@@ -648,7 +655,6 @@ int main(){
 	string file_name="21. Gareth Emery - Tokyo.mp3";
 	long cleaned_size;
 	streampos beg_file,end_file;
-	char * file_data;
 	char *nd_point;
 	char *fd_point;
 	char input;
@@ -717,7 +723,7 @@ int main(){
         end_file = file.tellg();
 
         if(file.is_open()){
-            file_data = new char[end_file-beg_file];
+            char * file_data = new char[end_file-beg_file];
             file.seekg(0, ios::beg);
             file.read(file_data,end_file-beg_file);
 
