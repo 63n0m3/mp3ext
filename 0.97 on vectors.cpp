@@ -169,7 +169,10 @@ int bin_to_int(char * byte_pointer, int bit_start,int length){
 }
 
 int granule_size(char * byte_pointer, int bits){
-	return (isbit(byte_pointer,bits+11)+(2*isbit(byte_pointer,bits+10))+(4*isbit(byte_pointer,bits+9))+(8*isbit(byte_pointer,bits+8))+(16*isbit(byte_pointer,bits+7))+(32*isbit(byte_pointer,bits+6))+(64*isbit(byte_pointer,bits+5))+(128*isbit(byte_pointer,bits+4))+(256*isbit(byte_pointer,bits+3))+(512*isbit(byte_pointer,bits+2))+(1024*isbit(byte_pointer,bits+1))+(2048*isbit(byte_pointer,bits)));
+	return (isbit(byte_pointer,bits + 11) + (2 * isbit(byte_pointer,bits + 10)) + (4 * isbit(byte_pointer,bits + 9))
+        + ( 8 * isbit(byte_pointer,bits + 8)) + (16 * isbit(byte_pointer,bits + 7)) + (32 * isbit(byte_pointer,bits + 6))
+        + (64 * isbit(byte_pointer,bits + 5)) + (128 * isbit(byte_pointer,bits + 4)) + (256 * isbit(byte_pointer,bits + 3))
+        + (512 * isbit(byte_pointer,bits + 2)) + (1024 * isbit(byte_pointer,bits + 1)) + (2048 * isbit(byte_pointer,bits)));
 }
 
 void display_B(char *pointer, int from, int to){
@@ -265,8 +268,10 @@ struct frame{
             header_size=4;
         }
           	////
-        n_offset=(isbit(s_i,8))+(2*isbit(s_i,7))+(4*isbit(s_i,6))+(8*isbit(s_i,5))+(16*isbit(s_i,4))+(32*isbit(s_i,3))+(64*isbit(s_i,2))+(128*isbit(s_i,1))+(256*isbit(s_i,0));
-        bitrate=bitrate_table(mpeg_sampling,is_layer,isbit(file_data+i_point,16),isbit(file_data+i_point,17),isbit(file_data+i_point,18),isbit(file_data+i_point,19));
+        n_offset = (isbit(s_i,8))+(2 * isbit(s_i,7))+(4 * isbit(s_i,6))+(8 * isbit(s_i,5))
+            + (16 * isbit(s_i,4)) + (32 * isbit(s_i,3)) + (64 * isbit(s_i,2))+(128 * isbit(s_i,1))+(256 * isbit(s_i,0));
+        bitrate = bitrate_table(mpeg_sampling, is_layer, isbit(file_data + i_point,16),
+            isbit(file_data + i_point,17), isbit(file_data + i_point,18), isbit(file_data + i_point,19));
 
         flb=(144000*bitrate)/smpl_rate;
 
@@ -352,14 +357,13 @@ struct frame{
             sfc2a=bin_to_int(s_i,39+118,4);
             sfc2b=bin_to_int(s_i,39+118+59,4);
         }
-		p2l_1a=table_length(slen_table(sfc1a,1),slen_table(sfc1a,2),mixed_block1a,block_type1a);
-		p2l_1b=table_length(slen_table(sfc1b,1),slen_table(sfc1b,2),mixed_block1b,block_type1b);
-		p2l_2a=table_length(slen_table(sfc2a,1),slen_table(sfc2a,2),mixed_block2a,block_type2a);
-        p2l_2b=table_length(slen_table(sfc2b,1),slen_table(sfc2b,2),mixed_block2b,block_type2b);
+		p2l_1a = table_length( slen_table(sfc1a,1), slen_table(sfc1a,2), mixed_block1a, block_type1a);
+		p2l_1b = table_length( slen_table(sfc1b,1), slen_table(sfc1b,2), mixed_block1b, block_type1b);
+		p2l_2a = table_length( slen_table(sfc2a,1), slen_table(sfc2a,2), mixed_block2a, block_type2a);
+        p2l_2b = table_length( slen_table(sfc2b,1), slen_table(sfc2b,2), mixed_block2b, block_type2b);
 
-        if((gran1a+gran1b+gran2a+gran2b)%8==0)frame_size=header_size+(gran1a+gran1b+gran2a+gran2b)/8;
-        else frame_size=header_size+(gran1a+gran1b+gran2a+gran2b)/8 +1;
-
+        if((gran1a + gran1b + gran2a + gran2b) % 8 == 0) frame_size = header_size + (gran1a + gran1b + gran2a + gran2b) / 8;
+        else frame_size = header_size + (gran1a + gran1b + gran2a + gran2b) / 8 + 1;
 	}
 
 		void display_param(){
@@ -389,7 +393,7 @@ struct frame{
 				else cout<<"gran 2a: *";
             }
             if (n_offset<((gran1a+gran1b+gran2a)/8)){
-                if (i==((gran1a+gran1b+gran2a)/8)-n_offset+header_size){
+                if (i == ((gran1a + gran1b + gran2a) / 8) - n_offset + header_size){
                     if(m_s==2)cout<<"gran 2b: *";
                     else cout<<"gran 2a: *";
                 }
@@ -405,18 +409,18 @@ struct frame{
                 }
                 else if (i==((gran1a+gran1b)/8)-n_offset)cout<<"gran 2a: *";
             }
-            if(i==-n_offset+header_size+(gran1a+gran1b+gran2a+p2l_2b)/8)cout<<"#";
+            if(i == - n_offset + header_size + (gran1a + gran1b + gran2a + p2l_2b) / 8) cout<<"#";
             if(((int)*(source+i))<16)cout<<"0";
             cout<<std::hex<<(int)*(source+i)<<" ";
-            if (i==((gran1a+gran1b+gran2a+gran2b)/8)-n_offset+header_size)cout<<"* <- end of granules  ";
-            if(n_offset!=0&&i==header_size-1)cout<<" <- end of header  ";
+            if (i == ((gran1a + gran1b + gran2a + gran2b) / 8) - n_offset + header_size) cout<<"* <- end of granules  ";
+            if(n_offset != 0 && i == header_size-1)cout<<" <- end of header  ";
 		//recheck all this may me missed by 1Byte
         }
 	cout<<endl;
 	}
 
 	void move_data(char * source, int header_distance, int move_frame){	//frame size dependent!
-        if(header_distance>frame_size-header_size)cout<<"Wrong header_distance"<<endl;
+        if(header_distance > frame_size - header_size)cout<<"Wrong header_distance"<<endl;
 		char data[frame_size-header_size];
 		char header[header_size];
 		for(int n=0;n<header_size;n++)header[n]=*(source+i_point+n);
@@ -460,7 +464,9 @@ void frames_stats(struct frame * fr,int frame_count, char * source, bool show_on
             if(bin_to_int(source+fr[n].i_point, 13,2)==0)continue;
             if(bin_to_int(source+fr[n].i_point+2, 0,4)==15)continue;
             if(bin_to_int(source+fr[n].i_point, 20,2)==3)continue;
-            stat_table[bin_to_int(source+fr[n].i_point, 11,2)][bin_to_int(source+fr[n].i_point, 13,2)][bin_to_int(source+fr[n].i_point, 16,4)][bin_to_int(source+fr[n].i_point, 20,2)][bin_to_int(source+fr[n].i_point, 24,2)]++;
+            stat_table [bin_to_int(source + fr[n].i_point, 11,2)] [bin_to_int(source + fr[n].i_point, 13,2)]
+                [bin_to_int(source + fr[n].i_point, 16,4)] [bin_to_int(source + fr[n].i_point, 20,2)]
+                [bin_to_int(source + fr[n].i_point, 24,2)] ++;
         }
 	}
 
@@ -472,7 +478,8 @@ void frames_stats(struct frame * fr,int frame_count, char * source, bool show_on
 				for(int m=0;m<16;m++){
 					for(int n=0;n<4;n++){
 						for(int o=0;o<4;o++){
-                            if((stat_table[k][l][m][n][o]>most_often[i][0]&&stat_table[k][l][m][n][o]<most_often[i-1][0]&&i>0)||(stat_table[k][l][m][n][o]>most_often[i][0]&&i==0)){
+                            if( (stat_table[k][l][m][n][o] > most_often[i][0] && stat_table[k][l][m][n][o] < most_often[i-1][0] && i > 0)
+                               || (stat_table[k][l][m][n][o] > most_often[i][0] && i == 0) ){
                                 most_often[i][0]=stat_table[k][l][m][n][o];
                                 most_often[i][1]=k;
                                 most_often[i][2]=l;
@@ -489,7 +496,9 @@ void frames_stats(struct frame * fr,int frame_count, char * source, bool show_on
 		if(most_often[i][2]==1)cout<<"layer 3 ";
 		if(most_often[i][2]==2)cout<<"layer 2 ";
 		if(most_often[i][2]==3)cout<<"layer 1 ";
-		cout<<bitrate_table(4-most_often[i][1], 4-(most_often[i][2]), isbit((char*)&most_often[i][3],4), isbit((char*)&most_often[i][3],5), isbit((char*)&most_often[i][3],6), isbit((char*)&most_often[i][3],7))<<"kbps ";
+		cout<<bitrate_table(4 - most_often[i][1], 4 - (most_often[i][2]), isbit((char*) & most_often[i][3],4),
+            isbit((char*) & most_often[i][3],5), isbit((char*) & most_often[i][3],6), isbit((char*) & most_often[i][3],7))
+            <<"kbps ";
         int smpl_rate;
         if(most_often[i][4]==0)smpl_rate=44100;
         else if(most_often[i][4]==1)smpl_rate=48000;
@@ -519,7 +528,8 @@ int check_frames(struct frame * fr,int frame_count){
                 if((fr[n].flb+fr[n].i_point==fr[n+k].i_point)/*&&(fr[n].frame_size+fr[n].i_point-fr[n].n_offset<=3+fr[n+k].i_point-fr[n+k].n_offset)*/){
                     fr[n+k].valid_frame=1;
                     next_frame_found=1;
-                    fr[n].empty_end_b=((fr[n+k].i_point-fr[n+k].n_offset-(fr[n].i_point-fr[n].n_offset))-fr[n].header_size)*8-(fr[n].gran1a+fr[n].gran1b+fr[n].gran2a+fr[n].gran2b);
+                    fr[n].empty_end_b = ( (fr[n + k].i_point-fr[n + k].n_offset-(fr[n].i_point - fr[n].n_offset))
+                        - fr[n].header_size ) * 8 - ( fr[n].gran1a + fr[n].gran1b + fr[n].gran2a + fr[n].gran2b );
 
                     fr[n+k].B_pre_valid=fr[n+k].i_point-fr[n].i_point;
                     if(fr[n].empty_end_b<0)fr[n].dont_move_next_frame=1;
@@ -529,19 +539,22 @@ int check_frames(struct frame * fr,int frame_count){
 		}}
         if(fr[n].valid_frame==1&&next_frame_found==0/*&&fr[n].bitrate!=0*/){
 			for(int k=1;k<100;k++)if(n+k<frame_count){
-                if(fr[n].frame_size+fr[n].i_point-fr[n].n_offset<fr[n+k].i_point-fr[n+k].n_offset&&fr[n].flb+fr[n].i_point<fr[n+k].i_point){
-                    fr[n+k].valid_frame=1;
-                    next_frame_found=1;
-                    fr[n].empty_end_b=((fr[n+k].i_point-fr[n+k].n_offset-(fr[n].i_point-fr[n].n_offset))-fr[n].header_size)*8-(fr[n].gran1a+fr[n].gran1b+fr[n].gran2a+fr[n].gran2b);
-                    fr[n+k].B_pre_valid=fr[n+k].i_point-fr[n].i_point;
-                    cout<<endl<<endl<<"WRONG2: "<<n<<" "<<n+k<<" "<<(fr[n].i_point-fr[n].n_offset)-(fr[n+k].i_point-fr[n+k].n_offset)-fr[n].frame_size<<endl;
-                    break;
+                if(fr[n].frame_size + fr[n].i_point - fr[n].n_offset < fr[n + k].i_point - fr[n + k].n_offset
+                    && fr[n].flb + fr[n].i_point < fr[n + k].i_point){
+                        fr[n+k].valid_frame=1;
+                        next_frame_found=1;
+                        fr[n].empty_end_b = ((fr[n + k].i_point - fr[n + k].n_offset - (fr[n].i_point - fr[n].n_offset))
+                            - fr[n].header_size) * 8 - (fr[n].gran1a + fr[n].gran1b + fr[n].gran2a + fr[n].gran2b);
+                        fr[n+k].B_pre_valid=fr[n+k].i_point-fr[n].i_point;
+                        cout<<endl<<endl<<"WRONG2: "<<n<<" "<<n + k<<" "<<(fr[n].i_point - fr[n].n_offset) - (fr[n + k].i_point
+                            - fr[n + k].n_offset) - fr[n].frame_size<<endl;
+                        break;
                 }
             }
 		}
     }
     for(int n=0;n<frame_count;n++){
-		if(fr[n].gran1a+fr[n].gran1b+fr[n].gran2a+fr[n].gran2b==0)fr[n].valid_frame=0;
+		if(fr[n].gran1a + fr[n].gran1b + fr[n].gran2a + fr[n].gran2b == 0)fr[n].valid_frame = 0;
 		if(fr[n].valid_frame==1){
 			valid_counter++;
 			fr[n].valid_frame_index=valid_counter;
@@ -560,24 +573,25 @@ int check_frames(struct frame * fr,int frame_count){
 vector<long long> potential_frames(char * source,long long length){
     vector <long long> headers_i;
     for(long long i=0;i<length-4;i++){
-        if(*(source+i)==(char)0xff && isbit(source+i,8)==true &&  isbit(source+i,9)==true && isbit(source+i,10)==true){
-            if(isbit(source+i,11)==false && isbit(source+i,12)==true){
+        if(*(source+i) == (char)0xff && isbit(source+i,8) == true &&  isbit(source+i,9) == true && isbit(source+i,10) == true){
+            if(isbit(source+i,11) == false && isbit(source+i,12) == true){
         	//	wrong_mpeg
                 continue;
             }
-            if(isbit(source+i,13)==false && isbit(source+i,14)==false){
+            if(isbit(source+i,13) == false && isbit(source+i,14) == false){
      //     	wrong_layer
                 continue;
           	}
-           if( isbit(source+i,16)==true && isbit(source+i,17)==true && isbit(source+i,18)==true &&  isbit(source+i,19)==true){
+           if( isbit(source+i,16) == true && isbit(source+i,17) == true && isbit(source+i,18) == true
+              && isbit(source+i,19) == true){
               	//wrong bitrate
               	continue;
             }
-            if(isbit(source+i,20)==true && isbit(source+i,21)==true){
+            if(isbit(source+i,20) == true && isbit(source+i,21) == true){
        //   	wrong_sampling11
                 continue;
           	}
-            if(isbit(source+i,30)==true && isbit(source+i,31)==false){
+            if(isbit(source+i,30) == true && isbit(source+i,31) == false){
          // 	wrong_emphasis
                 continue;
             }
@@ -593,42 +607,44 @@ void repack_frames(struct frame * fr,int frame_count,char * source){
 			set0bits(source+fr[n].i_point-fr[n].n_offset,fr[n].gran1a+fr[n].gran1b+fr[n].gran2a+fr[n].gran2b+(fr[n].header_size*8),fr[n].empty_end_b);
         }
 }}
-
-int rewrite_frames(struct frame * fr, int frames_count, char * input, char * output){
+    /// This is a kind of a debug check. Extracted frames are rewritten back again to new file for check of valid frames. Not all tracks will work, especially ones overleapingly packed.
+long long rewrite_frames(struct frame * fr, int frames_count, char * input, char * output){
     long s=0;
     int tmp=0;
     long s1;
     int k_i;
     int end_bits;
+    int neg_offset_fr0 = fr[0].n_offset;
+    if(neg_offset_fr0 < 0) neg_offset_fr0 = 0;
 
-    for(int n=0;n<frames_count;n++){
-        if(fr[n].valid_frame==0)continue;
-            if(fr[n].empty_end_b<0){
-                for(int k=0;n+k<frames_count&&k<100;k++){
-                    if(fr[n+k].valid_frame==1){
-                        end_bits+=(fr[n+k].i_point-fr[n+k].n_offset)-(fr[n].i_point-fr[n].n_offset);
-                        if(fr[n+k].empty_end_b<end_bits)end_bits=fr[n+k].empty_end_b;
+    for(int n = 0; n < frames_count; n++){
+        if(fr[n].valid_frame == 0) continue;
+            if(fr[n].empty_end_b < 0){
+                for(int k = 0;n + k < frames_count && k < 100; k++){
+                    if(fr[n + k].valid_frame == 1){
+                        end_bits += (fr[n + k].i_point - fr[n + k].n_offset) - (fr[n].i_point - fr[n].n_offset);
+                        if(fr[n + k].empty_end_b < end_bits) end_bits = fr[n + k].empty_end_b;
     	   //					s=s+fr[n].n_offset;
-    	   				for(int r=-fr[n].n_offset;r<(fr[n+k].i_point-fr[n+k].n_offset)-fr[n].i_point;r++){
-    	   					*(output+s+r)=*(input+fr[n].i_point+r);
+    	   				for(int r = - fr[n].n_offset; r < (fr[n + k].i_point - fr[n + k].n_offset) - fr[n].i_point; r++){
+    	   					*(output + s + r + neg_offset_fr0) = *(input + fr[n].i_point + r);
     	   				}
-    	   				s=s+fr[n+k].i_point-fr[n].i_point;
+    	   				s = s + fr[n + k].i_point - fr[n].i_point;
                         break;
                     }
             }}
             else
-                for(int r=-fr[n].n_offset;r<fr[n].frame_size-fr[n].n_offset;r++){
-                    *(output+s+r)=*(input+fr[n].i_point+r);
+                for (int r = - fr[n].n_offset; r < fr[n].frame_size - fr[n].n_offset; r++){
+                    *(output + s + r + neg_offset_fr0) = *(input + fr[n].i_point + r);
                 }
-            s=s+fr[n].flb;
+            s = s + fr[n].flb;
     }
-    return s;
+    return s + neg_offset_fr0;
 }
 
 int main(){
 
     int end_cin;
-	int unopened_mp3_files=0;
+	int unopened_mp3_files = 0;
 	string file_name="21. Gareth Emery - Tokyo.mp3";
 	long cleaned_size;
 	streampos beg_file,end_file;
@@ -637,13 +653,11 @@ int main(){
 	char *fd_point;
 	char input;
 	int tmp;
-	int valid_frames=0;
-	bool show_only_valid_frames_sw=0;
-	bool show_frame_data_sw=0;
-	int adjust_first_dis_fr=140;
-	int adjust_displayed_frames=60;
-	long s=0;
-	char * new_data;
+	int valid_frames = 0;
+	bool show_only_valid_frames_sw = 0;
+	bool show_frame_data_sw = 0;
+	int adjust_first_dis_fr = 140;
+	int adjust_displayed_frames = 60;
 /*	char * nd_point;
 	char * fd_point;	*/
 	string new_file_name;
@@ -660,25 +674,25 @@ int main(){
 	cout<<"Last opened file(any)/Input file name(i)/Show only valid frames on(v)/Show frame data(s)/Adjust displayed frames(a)/Exit(e):"<<endl;
 	while(1){
         cin>>input;
-		if(input=='v'){
-            if(show_only_valid_frames_sw==0){
-                show_only_valid_frames_sw=1;
+		if(input == 'v'){
+            if(show_only_valid_frames_sw == 0){
+                show_only_valid_frames_sw = 1;
                 cout<<"Show only valid frames ON"<<endl;
             }
             else{
-                show_only_valid_frames_sw=0;
+                show_only_valid_frames_sw = 0;
                 cout<<"Show only valid frames OFF"<<endl;
             }
         }
-		else if(input=='a'){
+		else if(input == 'a'){
 			cout<<"First displayed frame: ";
 			cin>>adjust_first_dis_fr;
 			cout<<endl<<"Displayed frames: ";
 			cin>>adjust_displayed_frames;
 		}
-		else if(input=='s'){
-            if(show_frame_data_sw==0){
-                show_frame_data_sw=1;
+		else if(input == 's'){
+            if(show_frame_data_sw == 0){
+                show_frame_data_sw = 1;
                 cout<<"Show frame data ON"<<endl;
             }
             else{
@@ -688,9 +702,9 @@ int main(){
 		}
 		else break;
     }
-    if(input=='e');
+    if(input == 'e');
     else{
-		if(input=='i'){
+		if(input == 'i'){
             cout<<"File name, patch:";
             std::getline(std::cin >> std::ws, file_name);
         }
@@ -708,42 +722,41 @@ int main(){
             file.read(file_data,end_file-beg_file);
 
             cout<<file_name<<" file opened. "<<"File size is: "<<(end_file-beg_file)<<" Bytes. "<<"File data read."<<endl;
-            new_data = new char[end_file-beg_file+20000000];
+            char * new_data = new char[end_file - beg_file + 5000];
             vector<long long> headers_indexes;
-            headers_indexes=potential_frames(file_data,end_file-beg_file);
+            headers_indexes = potential_frames(file_data, end_file - beg_file);
           	struct frame * f1 = new frame[headers_indexes.size()];
-            for(long n=0;n<headers_indexes.size();n++){
-                f1[n].i_point=headers_indexes[n];
+            for(long n = 0 ; n < headers_indexes.size(); n++){
+                f1[n].i_point = headers_indexes[n];
                 f1[n].find_frame_param(file_data);
             }
-            frames_stats(f1,headers_indexes.size(), file_data,0);
-            valid_frames=check_frames(f1,headers_indexes.size());
-            frames_stats(f1,headers_indexes.size(), file_data,1);
-            if(adjust_first_dis_fr+adjust_displayed_frames>=headers_indexes.size()){
+            frames_stats(f1, headers_indexes.size(), file_data,0);
+            valid_frames = check_frames(f1,headers_indexes.size());
+            frames_stats(f1,headers_indexes.size(), file_data, 1);
+            if(adjust_first_dis_fr + adjust_displayed_frames >= headers_indexes.size()){
                 cout<<"adjust_displayed_frames reached over last frame"<<endl;
-                adjust_displayed_frames=(headers_indexes.size())-adjust_first_dis_fr;
+                adjust_displayed_frames = (headers_indexes.size()) - adjust_first_dis_fr;
             }
-            for(int i=adjust_first_dis_fr;i<adjust_displayed_frames+adjust_first_dis_fr;i++)if(f1[i].valid_frame==1||show_only_valid_frames_sw==0){
-                cout<<std::dec<<i<<"/"<<f1[i].valid_frame_index<<") ";
-                cout<<f1[i].i_point+f1[i].flb<<"i+flb  ";
+            for(int i = adjust_first_dis_fr; i < adjust_displayed_frames + adjust_first_dis_fr; i++) if(f1[i].valid_frame == 1 || show_only_valid_frames_sw == 0){
+                cout<< std::dec << i << "/" << f1[i].valid_frame_index << ") ";
+                cout<< f1[i].i_point + f1[i].flb << "i+flb  ";
                 f1[i].display_param();
-                if(show_frame_data_sw)f1[i].display(file_data+f1[i].i_point);
+                if(show_frame_data_sw) f1[i].display(file_data + f1[i].i_point);
             }
-            for(int i=0; i<file_name.find(".mp3");i++)new_file_name=new_file_name+file_name[i];
-            new_file_name=new_file_name+"_extr.mp3";
+            for(int i = 0; i<file_name.find(".mp3"); i++)new_file_name = new_file_name + file_name[i];
+            new_file_name = new_file_name + "_extr.mp3";
             ofstream clean (new_file_name.c_str(), ios::binary);
             if(clean.is_open());
             else {
-                cout<<"Couldnt create "<<new_file_name<<endl;
+                cout<< "Couldnt create " << new_file_name << endl ;
             }
-            s=rewrite_frames(f1, headers_indexes.size(), file_data, new_data);
-            for(int i=0;i<s;i++)clean<<*(new_data+i);
+            long long s = rewrite_frames(f1, headers_indexes.size(), file_data, new_data);
+            for(long long i = 0; i < s; i++) clean << *(new_data + i);
             cout<<endl<<endl;
-            cleaned_size=clean.tellp();
+            cleaned_size = clean.tellp();
             clean.close();
-
             delete[] f1;
-        //    delete[] new_data;
+         //   delete[] new_data;
             delete[] file_data;
         }
         else{
